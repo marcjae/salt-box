@@ -1,0 +1,4 @@
+Boxes/
+*.vagrant/
+*.idea/
+config.yaml

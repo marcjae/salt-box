@@ -1,0 +1,33 @@
+server {
+    listen {{ salt['pillar.get']('nginx:vhost:port', 80) }};
+    server_name localhost;
+
+    root {{ salt['pillar.get']('nginx:vhost:root', '/var/www/application/public') }};
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ @rewrite;
+    }
+
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+{% if salt['pillar.get']('nginx:vhost:cache_static_files', 'off') == 'on' %}
+    location ~* \.(jpg|jpeg|gif|png|css|js|ico|woff|ttf|otf|eot|svg)$ {
+        access_log        off;
+        log_not_found     off;
+        expires           365d;
+    }
+{% endif %}
+
+    location @rewrite {
+        rewrite ^ /index.php;
+    }
+
+    error_log {{ salt['pillar.get']('nginx:vhost:error_log', '/var/log/nginx/application_error.log') }};
+}
