@@ -44,8 +44,9 @@ nginx-conf:
 
 nginx-remove-senabled-default:
   cmd.run:
-    - name: rm /etc/nginx/sites-enabled/default
+    - name: sudo rm /etc/nginx/sites-enabled/default
     - cwd: /root/
+    - output_loglevel: debug
     - require:
       - file: nginx-conf
       - pkg: nginx
