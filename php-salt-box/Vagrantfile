@@ -1,13 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# vagrant up --provider=digital_ocean || #jozi011@gmail.com
-
 # /etc/nginx/nginx.conf) --- sendfile off;
 
-
 require 'yaml'
-
 current_dir    = File.dirname(File.expand_path(__FILE__))
 configs        = YAML.load_file("#{current_dir}/../config.yaml")
 vagrant_config = configs['configs'][configs['configs']['use']]
