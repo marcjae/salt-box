@@ -16,6 +16,7 @@ nginx:
       - file: /etc/nginx/sites-enabled/application
       - pkg: nginx
 
+
 /var/www/application/public:
   file:
     - directory
@@ -46,7 +47,6 @@ nginx-remove-senabled-default:
   cmd.run:
     - name: sudo rm /etc/nginx/sites-enabled/default
     - cwd: /root/
-    - output_loglevel: debug
     - require:
       - file: nginx-conf
       - pkg: nginx
@@ -56,6 +56,7 @@ nginx-vhost-application:
     - name: /etc/nginx/sites-available/application
     - source: salt://_files/nginx/vhosts/application
     - template: jinja
+    - clean_file: true
     - require:
       - file: nginx-conf
       - pkg: nginx
@@ -72,7 +73,10 @@ nginx-vhost-tools:
   file.managed:
     - name: /etc/nginx/sites-available/tools
     - source: salt://_files/nginx/vhosts/tools
+    - user: vagrant
+    - group: vagrant
     - template: jinja
+    - clean_file: true
     - require:
       - file: nginx-vhost-application
       - pkg: nginx
